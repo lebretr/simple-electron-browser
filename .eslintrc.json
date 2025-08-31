@@ -1,0 +1,10 @@
+// .eslintrc.json
+{
+  "extends": "@electron-internal",
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-undef": "warn",
+    "one-var": ["error", "consecutive"],
+    "comma-style" : ["error", "first"]
+  }
+}

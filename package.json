@@ -19,8 +19,11 @@
     "@electron-forge/maker-zip": "^7.8.3",
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.3",
     "@electron-forge/plugin-fuses": "^7.8.3",
+    "@electron-internal/eslint-config": "^1.0.1",
     "@electron/fuses": "^1.8.0",
-    "electron": "^37.4.0"
+    "electron": "^37.4.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-node": "^11.1.0"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1"

@@ -1,56 +1,57 @@
 const { app, BaseWindow, WebContentsView } = require('electron');
 
 const createWindow = () => {
-    const win = new BaseWindow({ width: 800, height: 400, autoHideMenuBar: true /*, fullscreen :true*/});
-    win.maximize();
+  const widthOffsetView1 = 15
+    , heightOffsetView1 = 5
+    , win = new BaseWindow({
+      fullscreen: true
+      , width: 1200
+      , height: 720
+      , autoHideMenuBar: true
+    })
+    ;
 
-    const winBounds=win.getBounds();
+  win.maximize();
 
-    const view1 = new WebContentsView();
-    const widthOffset=5;
-    const heightOffset=5;
-    win.contentView.addChildView(view1);
-    view1.webContents.loadURL('http://google.com');
-    view1.setBounds({ x: 0, y: 0, width: winBounds.width-widthOffset, height: winBounds.height-heightOffset });
+  const view1 = new WebContentsView();
 
-    win.on('maximize',() => {
-        const winBounds=win.getBounds();
-        view1.setBounds({ x: 0, y: 0, width: winBounds.width-widthOffset, height: winBounds.height-heightOffset });
+  view1.updateSizeView = function updateSizeView () {
+    const winBounds = win.getBounds();
+    view1.setBounds({
+      x: 0
+      , y: 0
+      , width: winBounds.width - (win.fullScreen ? 0 : widthOffsetView1)
+      , height: winBounds.height - (win.fullScreen ? 0 : heightOffsetView1)
     });
-    win.on('unmaximize',() => {
-        const winBounds=win.getBounds();
-        view1.setBounds({ x: 0, y: 0, width: winBounds.width-widthOffset, height: winBounds.height-heightOffset });
-    });
-    win.on('restore',() => {
-        const winBounds=win.getBounds();
-        view1.setBounds({ x: 0, y: 0, width: winBounds.width-widthOffset, height: winBounds.height-heightOffset });
-    });
-    win.on('resize',() => {
-        const winBounds=win.getBounds();
-        view1.setBounds({ x: 0, y: 0, width: winBounds.width-widthOffset, height: winBounds.height-heightOffset });
-    });
-    win.on('enter-full-screen',() => {
-        const winBounds=win.getBounds();
-        view1.setBounds({ x: 0, y: 0, width: winBounds.width-widthOffset, height: winBounds.height-heightOffset });
-    });
-    win.on('leave-full-screenn',() => {
-        const winBounds=win.getBounds();
-        view1.setBounds({ x: 0, y: 0, width: winBounds.width-widthOffset, height: winBounds.height-heightOffset });
-    });
-}
+  };
+
+  win.contentView.addChildView(view1);
+  view1.webContents.loadURL('http://www.google.com');
+  view1.updateSizeView();
+
+  win.on('restore', () => {
+    view1.updateSizeView();
+  });
+  win.on('resize', () => {
+    view1.updateSizeView();
+  });
+  win.on('enter-full-screen', () => {
+    view1.updateSizeView();
+  });
+};
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+    if (BaseWindow.getAllWindows().length === 0) {
+      createWindow();
     }
-  })
-})
+  });
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
-})
+});
