@@ -1,5 +1,7 @@
 const { app, BaseWindow, WebContentsView } = require('electron');
 
+app.disableHardwareAcceleration();
+
 const createWindow = () => {
   const widthOffsetView1 = 15
     , heightOffsetView1 = 5
