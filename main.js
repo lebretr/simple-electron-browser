@@ -5,24 +5,26 @@ console.log(process.platform);
 app.disableHardwareAcceleration();
 app.commandLine.appendSwitch('password-store', 'basic');
 
-const createWindow = () => {
-  const widthOffsetView1 = (process.platform != 'linux' ? 15 : 0)
-    , heightOffsetView1 = (process.platform != 'linux' ? 5 : 0)
+const createWindow = function () {
+  const widthOffsetView1 = (process.platform === 'win32' ? 15 : 0)
+    , heightOffsetView1 = (process.platform === 'win32' ? 5 : 0)
     , win = new BaseWindow({
-      fullscreen: true
-      , width: 1200
+      width: 1200
       , height: 720
+      , fullscreen: true
       , autoHideMenuBar: true
     })
     ;
 
-  win.maximize();
+  if (!win.fullScreen) {
+    win.maximize();
+  }
 
   const view1 = new WebContentsView();
 
-  view1.updateSizeView = function updateSizeView () {
+  view1.updateSizeView = function updateSizeView (win) {
     const winBounds = win.getBounds();
-    view1.setBounds({
+    this.setBounds({
       x: 0
       , y: 0
       , width: winBounds.width - (win.fullScreen ? 0 : widthOffsetView1)
@@ -31,17 +33,20 @@ const createWindow = () => {
   };
 
   win.contentView.addChildView(view1);
-  view1.webContents.loadURL('http://www.google.com');
-  view1.updateSizeView();
+
+  setTimeout(function () {
+    view1.webContents.loadURL('http://www.google.com');
+    view1.updateSizeView(win);
+  }, 500);
 
   win.on('restore', () => {
-    view1.updateSizeView();
+    win.contentView.children[0].updateSizeView(win);
   });
   win.on('resize', () => {
-    view1.updateSizeView();
+    win.contentView.children[0].updateSizeView(win);
   });
   win.on('enter-full-screen', () => {
-    view1.updateSizeView();
+    win.contentView.children[0].updateSizeView(win);
   });
 };
 
