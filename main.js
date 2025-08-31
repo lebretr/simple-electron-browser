@@ -1,10 +1,13 @@
 const { app, BaseWindow, WebContentsView } = require('electron');
 
+console.log(process.platform);
+
 app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('password-store', 'basic');
 
 const createWindow = () => {
-  const widthOffsetView1 = 15
-    , heightOffsetView1 = 5
+  const widthOffsetView1 = (process.platform != 'linux' ? 15 : 0)
+    , heightOffsetView1 = (process.platform != 'linux' ? 5 : 0)
     , win = new BaseWindow({
       fullscreen: true
       , width: 1200
